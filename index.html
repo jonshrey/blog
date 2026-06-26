@@ -1,78 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>thinking</title>
     <style>
-        body { font-family: monospace; display: flex; margin: 0; background: #1e1e1e; color: #d4d4d4; height: 100vh; }
-        #sidebar { width: 250px; background: #252526; padding: 20px; border-right: 1px solid #3c3c3c; overflow-y: auto; }
-        #content { flex: 1; padding: 40px; overflow-y: auto; }
-        a { color: #4fc1ff; text-decoration: none; display: block; margin-bottom: 12px; font-size: 14px; }
-        a:hover { text-decoration: underline; color: #9cdcfe; cursor: pointer; }
-        pre { background: #2d2d2d; padding: 20px; border-radius: 5px; overflow-x: auto; color: #9cdcfe; white-space: pre-wrap; line-height: 1.6; }
-        h3 { color: #808080; margin-top: 0; border-bottom: 1px solid #3c3c3c; padding-bottom: 10px; }
-    </style>
-</head>
-<body>
+      * {
+        box-sizing: border-box;
+      }
 
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        background: #fafafa;
+        color: #111;
+      }
+
+      #sidebar {
+        width: 260px;
+        padding: 24px;
+        border-right: 1px solid #e5e5e5;
+        background: #fff;
+        overflow-y: auto;
+      }
+
+      #content {
+        flex: 1;
+        padding: 48px;
+        overflow-y: auto;
+        max-width: 900px;
+      }
+
+      h3 {
+        margin: 0 0 24px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      h2 {
+        margin: 0 0 28px;
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+
+      a {
+        display: block;
+        margin-bottom: 10px;
+        color: #555;
+        text-decoration: none;
+        font-size: 14px;
+        line-height: 1.5;
+        cursor: pointer;
+      }
+
+      a:hover {
+        color: #000;
+      }
+
+      pre {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        color: #222;
+        white-space: pre-wrap;
+        line-height: 1.7;
+        font-size: 15px;
+      }
+
+      #file-list {
+        font-size: 14px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
     <div id="sidebar">
-        <h3>All Logs</h3>
-        <div id="file-list">Loading files...</div>
+      <h3>All Logs</h3>
+      <div id="file-list">Loading files...</div>
     </div>
 
     <div id="content">
-        <h2 id="log-title">Select a log from the sidebar</h2>
-        <div id="log-body"></div>
+      <h2 id="log-title">Select a log from the sidebar</h2>
+      <div id="log-body"></div>
     </div>
 
     <script>
-        // CONFIGURATION: Change these to your exact GitHub details!
-        const GITHUB_USERNAME = 'jonshrey';
-        const REPO_NAME = 'blog';
+      // CONFIGURATION: Change these to your exact GitHub details!
+      const GITHUB_USERNAME = "jonshrey";
+      const REPO_NAME = "blog";
 
-        const fileListContainer = document.getElementById('file-list');
-        const logTitle = document.getElementById('log-title');
-        const logBody = document.getElementById('log-body');
+      const fileListContainer = document.getElementById("file-list");
+      const logTitle = document.getElementById("log-title");
+      const logBody = document.getElementById("log-body");
 
-        // 1. Automatically fetch the list of files in your repository folder
-        fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/`)
-            .then(res => res.json())
-            .then(files => {
-                fileListContainer.innerHTML = '';
-                
-                // Filter to look for text files and sort them so newer/alphabetical comes first
-                const textFiles = files.filter(file => file.name.endsWith('.txt')).reverse();
+      // 1. Automatically fetch the list of files in your repository folder
+      fetch(
+        `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/`,
+      )
+        .then((res) => res.json())
+        .then((files) => {
+          fileListContainer.innerHTML = "";
 
-                if(textFiles.length === 0) {
-                    fileListContainer.innerText = "No .txt files found.";
-                    return;
-                }
+          // Filter to look for text files and sort them so newer/alphabetical comes first
+          const textFiles = files
+            .filter((file) => file.name.endsWith(".txt"))
+            .reverse();
 
-                // Render the clickable sidebar links
-                textFiles.forEach(file => {
-                    const link = document.createElement('a');
-                    link.innerText = file.name.replace('.txt', '');
-                    link.onclick = () => loadFileContents(file.name, file.download_url);
-                    fileListContainer.appendChild(link);
-                });
+          if (textFiles.length === 0) {
+            fileListContainer.innerText = "No .txt files found.";
+            return;
+          }
 
-                // Automatically load the newest file by default on page load
-                loadFileContents(textFiles[0].name, textFiles[0].download_url);
-            })
-            .catch(() => fileListContainer.innerText = "Error loading directory.");
+          // Render the clickable sidebar links
+          textFiles.forEach((file) => {
+            const link = document.createElement("a");
+            link.innerText = file.name.replace(".txt", "");
+            link.onclick = () => loadFileContents(file.name, file.download_url);
+            fileListContainer.appendChild(link);
+          });
 
-        // 2. Fetch the text inside the clicked file and drop it into the page
-        function loadFileContents(name, url) {
-            logTitle.innerText = name.replace('.txt', '');
-            logBody.innerHTML = '<pre>Loading thoughts...</pre>';
-            
-            fetch(url)
-                .then(res => res.text())
-                .then(text => {
-                    logBody.innerHTML = `<pre>${text}</pre>`;
-                })
-                .catch(() => logBody.innerHTML = '<pre>Error loading file contents.</pre>');
-        }
+          // Automatically load the newest file by default on page load
+          loadFileContents(textFiles[0].name, textFiles[0].download_url);
+        })
+        .catch(
+          () => (fileListContainer.innerText = "Error loading directory."),
+        );
+
+      // 2. Fetch the text inside the clicked file and drop it into the page
+      function loadFileContents(name, url) {
+        logTitle.innerText = name.replace(".txt", "");
+        logBody.innerHTML = "<pre>Loading thoughts...</pre>";
+
+        fetch(url)
+          .then((res) => res.text())
+          .then((text) => {
+            logBody.innerHTML = `<pre>${text}</pre>`;
+          })
+          .catch(
+            () =>
+              (logBody.innerHTML = "<pre>Error loading file contents.</pre>"),
+          );
+      }
     </script>
-</body>
+  </body>
 </html>
