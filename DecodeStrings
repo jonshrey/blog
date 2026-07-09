@@ -1,0 +1,25 @@
+s = "2[a2[bc]]3[cd]ef" 
+So here the answer woukd be abcabccdcdcdef why this answer ? this answer leads us to a conclusion that we need to check for closin brackets but how do we do that there could be multiple closing and opening brackets how do we keep track of what elemtns are inside what bracket and what is their multiplier . hmm the first thoughts i can think of is using two stacks. so lets modify this exampple a bit 
+2[a2[bc]]3[cd]ef as you can see i have put an extra multpliesr in between a and bc. Now lets try to find this answer using two stacks one would be for number one would be for letters. first we found 2 we put it into stack then we check the other stack but it is emty and our bracketOpen is 0 so we do nothing because stack is empty now comes [  we increase breacketOpen to 1. move forward. come at a put on stack but can we compute answer from it yet? no because bracket is still open so move forward we come at 2 put on number stack can we now compute any string no because bracket is open now move breacketopen becomes 2 put b and c on letterStack . hmm that makes me ask a question how do we know how many characters are inside some brackets thats werid so maybe we put string as a whole inside stack? so lets say we put a as a string then we will put bc as a astring now we come at closing bracket so we know the top of stack is bc and top of numberStack is 2 so now tkae bcbc and attach it with a that makes top of stack abcbc. now naother closing bracket so that makes the whole string as 2abcbcabcbc nwo question is why did we put bcbc attached to a at top of string the answer is simple because we still ahve one bracket open so thats why now since the brackets are all closed we move forward we have 3 now ut to letter stack bracket openthen top of stack is cd braket closed attach cdcdcd to theanswer string finally ef since no bracket opens directly atatch so the answer becomes     abcbcabcbccdcdcdef. right now lets try to write the code 
+ so we will need two stacks :
+    Stack<Integer> numberStack = new Stack<>();
+    Stack<String> stringStack = new Stack<>();
+    a variable : int bracketsOpen = 0;
+    lets try to write the logic for it now so we will begin with a loop:
+      while(i < s.length()){
+        while(number){
+            stack.push(s.charAt(i) - '0' * 10 + number); // something like this 
+            //oh wait number can be till three digits hmm so maybe take a loop till we haev number
+        }
+        //similarly
+        if(openbracket)
+        bracketOpen ++;
+        while(!closebracket){
+            keep makeing string at the end ut it on top of stack
+        }
+
+        //then finally check if our bracket is closed then look at top of string and top of stack somethin like this 
+      }
+      //hmm just realised we dont actually need openbracket variable we can just reset our current string number when we encounter openingbracket.
+
+      yea i will go ahead and code it on letecode 
