@@ -1,0 +1,5 @@
+G1 string deduplication is garbage collection optimization which lets them sahre undelrine byte character array/.
+When objects are still reachable thats when a memory leak happens they are reachable but no longer needed 
+
+Gather evidence early : enable gc logging oh yes take a heap dump, caches without eviction policies not good.
+Each thread has a threadlocalmap so maybe something like threadlocalMap<threadId , runtime> this is just imaginary. usually key is a weak refernce and value is the stores object oh okay if a thread becomes unreachable the key will be cleaned up as it is weak but the value will still persists cause it has a strong reference unitol explicitly cleaned up. oh so basically thread keeps accumuating these values on every new reuqest if not cleareed so heap grows indefinitely

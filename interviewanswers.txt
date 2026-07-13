@@ -1,0 +1,3 @@
+I use OPenAPI because it is the industry standard for defining REST APIs. I write a spec that defines all the endpoints ,arameters request bodies and response schemas including error models. that makes the interface self descriptive for clients
+
+Al

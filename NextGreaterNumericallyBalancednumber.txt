@@ -14,3 +14,5 @@ yea so basically try all permutations and fit it in a list... damm it looks simp
   return ans;
 
 -> generateAllDigitSets then GenerateEverypermutation for each digit set
+Streams :
+ BigDecimal totla = orders.stream().filter(o -> Delievered.eequalTo(o,getStatus)).gilet(o -> o.getCustomer().isPremium).amp(Order :: getAmount)

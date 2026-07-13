@@ -1,0 +1,23 @@
+this seems like a classic recursion pivk not pick , with oddd we can go n + 1 and n - 1 with even there is only one way to go which is n / 2;to reach 1 we need to reach 2 always .
+class Solution {
+    public int integerReplacement(int n) {
+        return findMin(n);
+    }
+
+    private int findMin(int n) {
+        if (n == 1) {
+            return 0;
+        }
+
+        if (n % 2 == 0) {
+            int even = findMin(n / 2);
+        } else {
+            int odd = Math.min(findMin(n - 1), findMin(n + 1));
+        }
+
+        return Math.min(even, odd);
+
+    }
+} this is what i wrote initally just from top of my head why is vscode treating this like a java gile lol yea basically change it  do  1 + findMin(n / 2) and 1 + for the odd one thats it should work but lets optiise it using memo. so we can take a map memo here so why not an array memo we can intitalize it a s long ? but its risky here because array size neeeds int so its impossible memory wise .
+
+yes but there is an iterative way to sovle this too the idea lie in how can we reach the answer i mean where can we  reach after which the answer is guaranteed that would be 2 how cna we reach 2 guaranteed either by 4 or 3 , so basically it becomes if we are at 3 we will do -1 but if we are at any number where n % 4 == 1 our possible bet is again - 1 so we can reach 8 from there then 4 from there and 2 ->1 so thats the approach

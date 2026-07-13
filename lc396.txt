@@ -1,0 +1,3 @@
+nums = [4,3,2,6] 
+
+OUu i directly started solving this on leetcode thiking it would be easy just did a simulation at first failed 2 test cases because of TLE tried to implement a trick thinking if we reduce the sum of smallest element to 0 then we might get maximum tried but obviously thats not the solution so this one was tricky, finally got to the point where i thought i need to do something with the sum but i just oculdnt figure it out so i just read the editorial after that was hard to understand but makes sense . this one is a good question.// i thought why we doing n * [n- k] when at max someone only loses  n - 1 * but yea here we are taking totalSum thats why.

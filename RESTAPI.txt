@@ -1,0 +1,95 @@
+Standard JSON is what most APIs use but no built in way to mark something as a link or an action so it breaks self descriptive message constraint. oh so JSON_LD LD means Linked Data.
+So for things like payment system if or anything really if a client receive a request it should know what to do with it ? supose it receives three things name bank account and cvv and also that htey are text , its cool it can create text but it should also have the info how long that field should be any validation  rules are there or not the client should have the ability to tackle these too.
+So basically client needs to be dumb as possible.
+yea so we can define type but only if it is documented somewhere else we cannot just create types to send data magicallycause client needs to know about it
+
+Whreres the line between what hypermedia describes and where the server should validate anyway? 
+So for something like bank details it is absolutely important as a security measure to validate everything at the server before sending it to client thats our main gaol in such cases but for other cases like text length or paragraph length or rating or anything else we can get awy by validating it on the client .that can enabl richer offline UIs or immediate feedback but for sensitive things validation shoudl be on server side only.
+but wheer is the line 
+optimistic sumbission with server driven feedback
+so what validation logic belongs to hypermedia and what to server?
+
+stateless messages and dynamic business rules
+Sturvutral rules : like should contain @ should be of this length can be done on client side but business rules which are changing should be on server like is a coupon code redeemed or not 
+
+Always try to make the response actionable so the client knows what is it doing.
+{
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "message": "Promo code EXPIRED",
+  "invalid_field": "promo_code",
+  "submitted_value": "EXPIRED"
+} // this is minimal self descriptive response but errors should be a resource that can be used to update the UI state/ :
+{
+  "class": ["error", "promo-error"],
+  "properties": {
+    "status": 422,
+    "error": "Unprocessable Entity",
+    "message": "Promo code EXPIRED",
+    "invalid_field": "promo_code"
+  },
+  "links": [
+    { "rel": "self", "href": "/orders/order-9876/promo-validation" },
+    { "rel": "retry", "href": "/orders/order-9876/payment", 
+      "title": "Re-enter promo code" },
+    { "rel": "clear-promo", "href": "/orders/order-9876/payment?clear-promo=true", 
+      "method": "POST", "title": "Remove promo code and continue" },
+    { "rel": "find-promos", "href": "/promotions", 
+      "title": "View available promotions" }
+  ]
+}
+How does the client know which link to follow automatically versus which to present to the user as a choice?
+
+Should server generate the idempotency key? an idempotency key on the server is peerfectly stateless as far as the REST interaction goes. oh ther srver pre generated key is an even more RESTful design.
+
+Define custom link realtion like status or monitor to signal poll this url forfinal outcke
+{
+  "orderID": 24234,
+  "payment_status": "COMPLETED",
+  "order": "Cafe Latte",
+  "orderAmount": "274",
+  "currency": "INR",
+  "orderStatus": "SERVED",
+  "_links": {
+    "self": { "href": "/payments/attempt-xyz/status" },
+    "order": { "href": "/orders/24234", "title": "View order" },
+    "home": { "href": "/", "title": "Back to homepage" }
+  }
+}
+
+versioning of APIS :
+ URI path versioning : breks RESTfulness can lead to code duplication
+
+  query parameter versioning : users/42?version =1 
+     same breaks REstfullense
+
+   Custom header request : attach a HEADER TO request harder to test from browswr 
+
+   Content - negotiation - the correct RESTful way/
+   Domain versioning - but comes with operational overhewad.
+
+   paginatipon : GET /products?limit=10&offset=21 page drift or phantom record problem can occur , also bad performanace for large offsets
+   cursor - based - GET/products?limit=10&cursor=ey342wqA it is a base62 enocded id
+
+   Authentication priving who you are authorization is whtt you are allowed to do
+   Common methods to send proof of identity : 
+    API keys : simple but less secure
+    Bearer Tokens(JWT) : Authorization : Bearer <token> -> Header , Payload and Signature header.payload.signature, algorithm.claims(userId,expiration).created by taking thepayloa header and secret key and hashing them 
+
+    Oauth2 defines how an applicant gets an access token.it defines different grant "types"
+
+    Open Api specification is a standard way to define REST APIs  
+
+Algorithm to implement rate limiting : 
+  sliding window 
+  fixed sliding window
+  most common - token bucket okay so a bucket hold tokens lets say 100    then tokens are added at a steady rate each request consume a token if bucket is empty request is rejected
+
+  leaky bucket
+
+  For rate limiting i would use a token bucket orsliding window counter.the users tier is extracted from jwt claims after Authentication
+
+  To protect agains sql injection always use parameterized queries.
+
+  CORS - cross origin resorce sharing
+
